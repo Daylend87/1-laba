@@ -1,0 +1,23 @@
+open System
+
+// Функция для вычисления факториала числа
+let rec factorial n =
+    if n <= 1 then 1
+    else n * factorial (n - 1)
+
+[<EntryPoint>]
+let main argv =
+    // Просим пользователя ввести число
+    printf "Введите число: "
+    let input = Console.ReadLine()
+
+    // Проверяем, является ли введённое значение числом
+    match Int32.TryParse(input) with
+    | true, number when number >= 0 ->
+        // Вычисляем факториал и выводим результат
+        let result = factorial number
+        printfn "Факториал числа %d равен %d" number result
+    | _ ->
+        printfn "Пожалуйста, введите неотрицательное целое число."
+    
+    0 // Возвращаем код завершения программы
