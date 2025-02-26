@@ -1,0 +1,22 @@
+open System
+
+[<EntryPoint>]
+let main argv =
+    printfn "Введите числа по одному. Для завершения ввода оставьте строку пустой и нажмите Enter."
+
+    let rec processInput () =
+        let input = Console.ReadLine()
+        match input with
+        | null | "" -> () // Завершаем ввод
+        | _ ->
+            match Double.TryParse(input) with
+            | true, value ->
+                // Выводим модуль введённого числа
+                printfn "Модуль числа: %f" (abs value)
+                processInput () // Рекурсивно продолжаем ввод
+            | false, _ ->
+                printfn "Это не число! Попробуйте снова."
+                processInput () // Рекурсивно продолжаем ввод
+
+    processInput ()
+    0
