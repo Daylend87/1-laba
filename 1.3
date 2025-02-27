@@ -1,6 +1,7 @@
 open System
 
 module ListOperations =
+
     // Функция для добавления элемента в конец списка
     let addElement list element =
         list @ [element]
@@ -26,9 +27,6 @@ module ListOperations =
 
 [<EntryPoint>]
 let main argv =
-    // Изначально пустой список
-    let mutable currentList = []
-
     printfn "Операции со списком:"
     printfn "1 - Добавить элемент"
     printfn "2 - Удалить элемент"
@@ -38,22 +36,23 @@ let main argv =
     printfn "6 - Показать текущий список"
     printfn "0 - Выйти"
 
-    let rec operations () =
+    let rec operations (currentList: int list) =
         printf "\nВведите номер операции: "
+
         match Console.ReadLine() with
-        | "1" -> 
+        | "1" ->
             printf "Введите элемент для добавления: "
             let value = Console.ReadLine() |> Int32.Parse
-            currentList <- ListOperations.addElement currentList value
-            printfn "Элемент добавлен. Текущий список: %A" currentList
-            operations ()
-        
+            let updatedList = ListOperations.addElement currentList value
+            printfn "Элемент добавлен. Текущий список: %A" updatedList
+            operations updatedList
+
         | "2" ->
             printf "Введите элемент для удаления: "
             let value = Console.ReadLine() |> Int32.Parse
-            currentList <- ListOperations.removeElement currentList value
-            printfn "Элемент удалён (если существовал). Текущий список: %A" currentList
-            operations ()
+            let updatedList = ListOperations.removeElement currentList value
+            printfn "Элемент удалён (если существовал). Текущий список: %A" updatedList
+            operations updatedList
 
         | "3" ->
             printf "Введите элемент для поиска: "
@@ -63,14 +62,14 @@ let main argv =
                 printfn "Элемент найден в списке."
             else
                 printfn "Элемент не найден."
-            operations ()
+            operations currentList
 
         | "4" ->
             printf "Введите второй список (разделите элементы пробелами): "
             let secondList = Console.ReadLine().Split(' ') |> Array.map Int32.Parse |> Array.toList
-            currentList <- ListOperations.concatenateLists currentList secondList
-            printfn "Списки объединены. Текущий список: %A" currentList
-            operations ()
+            let updatedList = ListOperations.concatenateLists currentList secondList
+            printfn "Списки объединены. Текущий список: %A" updatedList
+            operations updatedList
 
         | "5" ->
             printf "Введите индекс элемента: "
@@ -81,19 +80,19 @@ let main argv =
             with
             | :? System.Exception as ex ->
                 printfn "Ошибка: %s" ex.Message
-            operations ()
+            operations currentList
 
         | "6" ->
             printfn "Текущий список: %A" currentList
-            operations ()
+            operations currentList
 
         | "0" ->
             printfn "Выход из программы."
 
         | _ ->
             printfn "Некорректная операция. Попробуйте снова."
-            operations ()
+            operations currentList
 
-    // Начинаем работу с пользователем
-    operations ()
+    // Изначально пустой список передаётся в рекурсивную функцию
+    operations []
     0 // Возврат кода завершения
